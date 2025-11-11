@@ -56,14 +56,14 @@ class Invoice(db.Model):
     rupees_in_words = db.Column(db.Text)
     bank_details = db.Column(db.Text)
 
-@app.before_first_request
-def init_db():
-    db.create_all()
-    seq = InvoiceSequence.query.first()
-    if not seq:
-        seq = InvoiceSequence(next_invoice=10001)
-        db.session.add(seq)
-        db.session.commit()
+# Initialize database (Flask 3.x compatible)
+with app.app_context():
+db.create_all()
+seq = InvoiceSequence.query.first()
+if not seq:
+seq = InvoiceSequence(next_invoice=10001)
+db.session.add(seq)
+db.session.commit()
 
 def send_otp(mobile, code):
     if TWILIO_SID and TWILIO_TOKEN and TWILIO_FROM:
