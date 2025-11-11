@@ -1,9 +1,8 @@
-
 import os, random, string
 from datetime import datetime, timedelta
 from io import BytesIO
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, abort
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from xhtml2pdf import pisa
@@ -21,7 +20,6 @@ TWILIO_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
 TWILIO_FROM = os.environ.get('TWILIO_FROM')
 
-# Models
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mobile = db.Column(db.String(32), unique=True, nullable=False)
@@ -58,12 +56,12 @@ class Invoice(db.Model):
 
 # Initialize database (Flask 3.x compatible)
 with app.app_context():
-db.create_all()
-seq = InvoiceSequence.query.first()
-if not seq:
-seq = InvoiceSequence(next_invoice=10001)
-db.session.add(seq)
-db.session.commit()
+    db.create_all()
+    seq = InvoiceSequence.query.first()
+    if not seq:
+        seq = InvoiceSequence(next_invoice=10001)
+        db.session.add(seq)
+        db.session.commit()
 
 def send_otp(mobile, code):
     if TWILIO_SID and TWILIO_TOKEN and TWILIO_FROM:
@@ -79,7 +77,7 @@ def send_otp(mobile, code):
         return True
 
 def get_next_invoice_number():
-    seq = InvoiceSequence.query.with_for_update().first()
+    seq = InvoiceSequence.query.first()
     if not seq:
         seq = InvoiceSequence(next_invoice=10001)
         db.session.add(seq)
@@ -154,11 +152,7 @@ def new_invoice():
         except:
             amount_main = gst = other = 0.0
         total = amount_main + gst + other
-        try:
-            invoice_number = get_next_invoice_number()
-        except Exception:
-            last = db.session.query(db.func.max(Invoice.invoice_number)).scalar() or 10000
-            invoice_number = last + 1
+        invoice_number = get_next_invoice_number()
         inv = Invoice(
             invoice_number=invoice_number,
             created_by=session.get('user_mobile'),
