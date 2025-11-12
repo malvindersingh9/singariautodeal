@@ -1,1 +1,57 @@
-<!doctype html><html><head><meta charset="utf-8"/><style>body { font-family: DejaVu Sans, Arial, sans-serif; font-size:12px; margin:20px; } .header { display:flex; justify-content:space-between; align-items:center; } .title { text-align:center; font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:10px;} .box { border:1px solid #000; padding:8px; } table { width:100%; border-collapse:collapse; margin-top:8px; } .field { padding:4px 6px; border-bottom:1px solid #ddd; } .right { text-align:right; } .footer { margin-top:30px; display:flex; justify-content:space-between; } .signature { width:200px; text-align:center; border-top:1px solid #000; margin-top:20px; }</style></head><body><div class='header'><div><div style='font-weight:bold;'>BAJAJ</div><div>Singari Auto Deal — Authorised Dealer for Bajaj Auto Limited</div></div><div style='text-align:right;'><div style='font-weight:bold; font-size:20px;'>PROFORMA INVOICE</div><div>Invoice No: <strong>{{ inv.invoice_number }}</strong></div><div>Date: {{ inv.date }}</div></div></div><div style='margin-top:12px;'><table><tr><td style='width:65%; vertical-align:top;'><div class='box'><strong>Name:</strong> {{ inv.name or '' }}<br><strong>Address:</strong> {{ inv.address or '' }}<br><strong>Contact No:</strong> {{ inv.contact_no or '' }}</div></td><td style='width:35%; vertical-align:top;'><div class='box right'><div><strong>Total (Rs):</strong></div><div style='font-size:20px; font-weight:bold;'>{{ '%.2f'|format(inv.total or 0) }}</div></div></td></tr></table></div><div style='margin-top:10px;'><table border='0'><tr><td class='field'><strong>Model:</strong> {{ inv.model or '' }}</td><td class='field right'><strong>Amount:</strong> {{ '%.2f'|format(inv.amount_main or 0) }}</td></tr><tr><td class='field'><strong>Accessories:</strong> {{ inv.accessories or '' }}</td><td class='field right'><strong>GST:</strong> {{ '%.2f'|format(inv.gst or 0) }}</td></tr><tr><td class='field'><strong>Other Details:</strong> {{ inv.other or '' }}</td><td class='field right'><strong>Total:</strong> {{ '%.2f'|format(inv.total or 0) }}</td></tr></table></div><div style='margin-top:10px;'><strong>Rupees:</strong> {{ inv.rupees_in_words or '' }}</div><div class='footer'><div><div><strong>Bank details</strong></div><div>{{ inv.bank_details or '' }}</div></div><div style='text-align:right'><div class='signature'>Proprietor/Manager</div></div></div></body></html>
+<!doctype html><html><head><meta charset="utf-8"/><style>
+body { font-family: DejaVu Sans, Arial, sans-serif; font-size:12px; margin:20px; }
+.header { display:flex; justify-content:space-between; align-items:center; }
+.left {display:flex;align-items:center;}
+.logo { width:140px; }
+.company { font-weight:bold; font-size:18px; margin-left:10px; }
+.title { text-align:center; font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:10px;}
+table { width:100%; border-collapse:collapse; margin-top:8px; }
+th, td { border:1px solid #000; padding:6px; }
+.right { text-align:right; }
+.footer { margin-top:20px; }
+.signature { width:200px; text-align:center; border-top:1px solid #000; margin-top:20px; }
+</style></head><body>
+<div class="header">
+  <div class="left">
+    <img src="{{ url_for('static', filename='logo.jpg') }}" class="logo">
+    <div class="company">
+      SINGARI AUTO DEAL<br>
+      <span style="font-weight:normal; font-size:12px;">206, Maheshpura Bakshi Nagar, Jammu. 180001</span>
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <div style="font-weight:bold; font-size:20px;">PROFORMA INVOICE</div>
+    <div>Invoice No: <strong>{{ inv.invoice_number }}</strong></div>
+    <div>Date: {{ inv.date }}</div>
+  </div>
+</div>
+
+<div style="margin-top:12px;">
+  <table>
+    <tr><td style="width:60%;"><strong>Name:</strong> {{ inv.name }}</td><td style="width:40%;"><strong>Contact:</strong> {{ inv.contact_no }}</td></tr>
+    <tr><td colspan="2"><strong>Address:</strong> {{ inv.address }}</td></tr>
+  </table>
+</div>
+
+<div style="margin-top:10px;">
+  <table>
+    <tr><th>Model</th><th>Ex-Showroom (Rs.)</th><th>Insurance</th><th>Registration</th><th>Accessories</th><th>Other</th></tr>
+    <tr><td>{{ inv.model }}</td><td class="right">{{ '%.2f'|format(inv.ex_showroom or 0) }}</td><td class="right">{{ '%.2f'|format(inv.insurance or 0) }}</td><td class="right">{{ '%.2f'|format(inv.registration or 0) }}</td><td class="right">{{ '%.2f'|format(inv.accessories or 0) }}</td><td class="right">{{ '%.2f'|format(inv.other_amount or 0) }}</td></tr>
+    <tr><td colspan="5" class="right"><strong>Total</strong></td><td class="right"><strong>{{ '%.2f'|format(inv.total or 0) }}</strong></td></tr>
+  </table>
+</div>
+
+<div style="margin-top:10px;"><strong>Rupees (in words):</strong> {{ inv.rupees_in_words }}</div>
+
+<div class="footer">
+  <div><strong>Bank details:</strong> {{ inv.bank_details }}</div>
+  <div style="text-align:right" class="signature">Proprietor/Manager</div>
+</div>
+
+<div style="margin-top:20px; border-top:1px solid #000; padding-top:10px;">
+<p><strong>Terms & Conditions</strong></p>
+<p>Rate prevailing at the time of delivery will be applicable.</p>
+<p>I declare that the information mentioned above is true & correct to the best of my knowledge.</p>
+</div>
+
+</body></html>
